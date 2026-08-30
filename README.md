@@ -44,7 +44,7 @@ These presets are examples for demonstration. Users can also paste their own Jav
 
 ## How It Works
 
-```text
+
 User
  │
  ▼
