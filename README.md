@@ -44,309 +44,404 @@ These presets are examples for demonstration. Users can also paste their own Jav
 
 ## How It Works
 
+AI-Legacy follows a simple client-server architecture.
 
+```text
 User
- │
- ▼
+  |
+  v
 React Frontend
- │
- │ POST /api/modernize
- ▼
+  |
+  | POST /api/modernize
+  v
 Express Backend
- │
- ▼
+  |
+  v
 Gemini API
- │
- │ Modernized JavaScript
- ▼
+  |
+  | Modernized JavaScript
+  v
 Express Backend
- │
- ▼
+  |
+  v
 React Workbench
- │
- ├── Diff View
- ├── Clean Code
- ├── Copy
- └── Download
+  |
+  +-- Diff View
+  +-- Clean Code
+  +-- Copy
+  +-- Download
+```
 
-For authenticated users, modernization history is additionally stored in MongoDB Atlas.
+For authenticated users, the modernization session is also saved to MongoDB Atlas.
 
+```text
 User Login
-    │
-    ▼
+    |
+    v
 JWT Authentication
-    │
-    ▼
+    |
+    v
 Modernization
-    │
-    ▼
+    |
+    v
 MongoDB Atlas
-    │
-    ▼
+    |
+    v
 Personal History
+```
 
-Architecture
+---
 
-AI-Legacy follows a client-server architecture.
+## Architecture
 
-Frontend
+AI-Legacy is divided into three main parts.
+
+### Frontend
 
 Built with React and Vite.
 
 Responsible for:
 
-User interface
-Authentication state
-Code input
-Modernization requests
-Diff visualization
-History interface
-Theme management
-Backend
+- User interface
+- Authentication state
+- Code input
+- Modernization requests
+- Diff visualization
+- History interface
+- Theme management
+
+### Backend
 
 Built with Node.js and Express.
 
 Responsible for:
 
-REST API
-Gemini API communication
-Authentication
-JWT verification
-Password hashing
-History management
-MongoDB communication
-Database
+- REST API
+- Gemini API communication
+- Authentication
+- JWT verification
+- Password hashing
+- History management
+- MongoDB communication
+
+### Database
 
 MongoDB Atlas stores:
 
-User accounts
-Modernization history
-Original code
-Modernized code
-Explanations
-Timestamps
-Tech Stack
-Frontend
-React
-Vite
-Tailwind CSS
-Lucide React
-diff library
-Backend
-Node.js
-Express
-JSON Web Token (JWT)
-bcryptjs
-MongoDB
-Mongoose
-AI
-Google Gemini API
-Database
-MongoDB Atlas
+- User accounts
+- Modernization history
+- Original code
+- Modernized code
+- Explanations
+- Timestamps
 
-Project Structure
+---
 
+## Tech Stack
+
+### Frontend
+
+- React
+- Vite
+- Tailwind CSS
+- Lucide React
+- diff library
+
+### Backend
+
+- Node.js
+- Express
+- JSON Web Token (JWT)
+- bcryptjs
+- MongoDB
+- Mongoose
+
+### AI
+
+- Google Gemini API
+
+### Database
+
+- MongoDB Atlas
+
+---
+
+## Project Structure
+
+```text
 AI-Legacy/
-│
-├── backend/
-│   ├── config/
-│   │   └── db.js
-│   │
-│   ├── controller/
-│   │   ├── authController.js
-│   │   ├── historyController.js
-│   │   └── modernizeController.js
-│   │
-│   ├── middleware/
-│   │   └── authMiddleware.js
-│   │
-│   ├── models/
-│   │   ├── History.js
-│   │   └── User.js
-│   │
-│   ├── routes/
-│   │   ├── authRoutes.js
-│   │   ├── historyRoutes.js
-│   │   └── modernizeRoutes.js
-│   │
-│   ├── service/
-│   │   └── geminiService.js
-│   │
-│   ├── package.json
-│   └── server.js
-│
-├── frontend/
-│   ├── public/
-│   │
-│   ├── src/
-│   │   ├── assets/
-│   │   ├── components/
-│   │   ├── context/
-│   │   ├── data/
-│   │   ├── pages/
-│   │   ├── App.jsx
-│   │   ├── index.css
-│   │   └── main.jsx
-│   │
-│   ├── package.json
-│   └── vite.config.js
-│
-├── .gitignore
-└── README.md
+|
++-- backend/
+|   |
+|   +-- config/
+|   |   +-- db.js
+|   |
+|   +-- controller/
+|   |   +-- authController.js
+|   |   +-- historyController.js
+|   |   +-- modernizeController.js
+|   |
+|   +-- middleware/
+|   |   +-- authMiddleware.js
+|   |
+|   +-- models/
+|   |   +-- History.js
+|   |   +-- User.js
+|   |
+|   +-- routes/
+|   |   +-- authRoutes.js
+|   |   +-- historyRoutes.js
+|   |   +-- modernizeRoutes.js
+|   |
+|   +-- service/
+|   |   +-- geminiService.js
+|   |
+|   +-- package.json
+|   +-- server.js
+|
++-- frontend/
+|   |
+|   +-- public/
+|   |
+|   +-- src/
+|       |
+|       +-- assets/
+|       +-- components/
+|       |   +-- DiffEditor.jsx
+|       |   +-- Header.jsx
+|       |   +-- HistoryDashboard.jsx
+|       |   +-- LoginView.jsx
+|       |   +-- RegisterView.jsx
+|       |
+|       +-- context/
+|       |   +-- AuthContext.jsx
+|       |   +-- ThemeContext.jsx
+|       |
+|       +-- data/
+|       |   +-- presets.js
+|       |
+|       +-- pages/
+|       |   +-- HistoryPage.jsx
+|       |   +-- LandingPage.jsx
+|       |   +-- WorkbenchPage.jsx
+|       |
+|       +-- App.jsx
+|       +-- index.css
+|       +-- main.jsx
+|
+|   +-- package.json
+|   +-- vite.config.js
+|
++-- .gitignore
++-- README.md
+```
 
-Authentication
+---
+
+## Authentication
 
 AI-Legacy uses JWT-based authentication.
 
-Registration
+### Registration
 
+```text
 User submits name, email and password
-              ↓
-Express API
-              ↓
-Password hashed with bcrypt
-              ↓
-User stored in MongoDB
-              ↓
-JWT generated
-              ↓
-Token returned to frontend
+              |
+              v
+        Express API
+              |
+              v
+     Password hashed with bcrypt
+              |
+              v
+       User stored in MongoDB
+              |
+              v
+          JWT generated
+              |
+              v
+        Token returned
+```
 
-Login
+### Login
 
+```text
 Email + Password
-       ↓
-Express API
-       ↓
-Find user
-       ↓
+       |
+       v
+  Express API
+       |
+       v
+   Find User
+       |
+       v
 Compare password using bcrypt
-       ↓
-Generate JWT
-       ↓
-Return token
+       |
+       v
+ Generate JWT
+       |
+       v
+ Return token
+```
 
 Protected routes use the JWT in the request header:
 
+```text
 Authorization: Bearer <token>
+```
 
-API Endpoints
-Authentication
-Method	Endpoint	Description
-POST	/api/auth/register	Register a new user
-POST	/api/auth/login	Login
-GET	/api/auth/me	Get authenticated user
+---
 
-Modernization
-Method	Endpoint	Description
-POST	/api/modernize	Modernize JavaScript using Gemini
+## API Endpoints
 
-History
-Method	Endpoint	Description
-GET	/api/history	Get authenticated user's history
-POST	/api/history	Save a modernization session
-DELETE	/api/history/:id	Delete a history record
+### Authentication
 
-Getting Started
-1. Clone the repository
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/auth/register` | Register a new user |
+| POST | `/api/auth/login` | Login |
+| GET | `/api/auth/me` | Get authenticated user |
 
+### Modernization
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/modernize` | Modernize JavaScript using Gemini |
+
+### History
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/history` | Get authenticated user's history |
+| POST | `/api/history` | Save a modernization session |
+| DELETE | `/api/history/:id` | Delete a history record |
+
+---
+
+## Getting Started
+
+### 1. Clone the Repository
+
+```bash
 git clone <your-repository-url>
 cd AI-Legacy
+```
 
-2. Install backend dependencies
+### 2. Install Backend Dependencies
+
+```bash
 cd backend
 npm install
-3. Configure backend environment variables
+```
 
-Create:
+### 3. Configure Environment Variables
 
+Create a `.env` file inside the `backend` directory:
+
+```text
 backend/.env
+```
 
 Add your own credentials:
 
+```env
 MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
 GEMINI_API_KEY=your_gemini_api_key
 PORT=5000
+```
 
-Never commit your .env file.
+Never commit your `.env` file.
 
-4. Install frontend dependencies
+### 4. Install Frontend Dependencies
 
 Open another terminal:
 
+```bash
 cd frontend
 npm install
-5. Start the backend
+```
 
-From backend/:
+### 5. Start the Backend
 
+From the `backend` directory:
+
+```bash
 npm start
+```
 
 The backend runs on:
 
+```text
 http://localhost:5000
-6. Start the frontend
+```
 
-From frontend/:
+### 6. Start the Frontend
 
+From the `frontend` directory:
+
+```bash
 npm run dev
+```
 
 Vite will provide the local development URL.
 
-Example
+---
 
-A user can start with legacy code such as:
+## Example
 
+A user can start with legacy JavaScript such as:
+
+```javascript
 var name = "Krishna";
 
 console.log(name);
+```
 
 The AI modernization service can transform it into:
 
+```javascript
 const name = "Krishna";
 
 console.log(name);
+```
 
 The Workbench then allows the user to inspect the transformation using the diff view.
 
-Security
+---
+
+## Security
 
 Sensitive configuration is kept in environment variables.
 
 The repository ignores:
 
+```text
 .env
 node_modules/
 dist/
 build/
+```
 
 API keys, database credentials, and JWT secrets should never be committed to the repository.
 
-Future Improvements
+---
+
+## Future Improvements
 
 Possible future improvements include:
 
-Support for additional programming languages
-More advanced static code analysis
-Improved modernization validation
-GitHub repository integration
-Automated test generation for modernized code
-Additional refactoring strategies
-Author
+- Support for additional programming languages
+- More advanced static code analysis
+- Improved modernization validation
+- GitHub repository integration
+- Automated test generation for modernized code
+- Additional refactoring strategies
 
-Krishna Jaiswal
+---
+
+## Author
+
+**Krishna Jaiswal**
 
 AI-Legacy — AI-Powered JavaScript Modernization Workbench
-
-
-### One important correction before we commit
-
-I intentionally wrote the README around what we've actually built rather than claiming things like **"AI automatically improves performance"** or **"guarantees secure code"**. Those are claims we shouldn't make unless your backend actually implements and validates them.
-
-Also, don't put your actual:
-
-```text
-MONGODB_URI
-JWT_SECRET
-GEMINI_API_KEY
