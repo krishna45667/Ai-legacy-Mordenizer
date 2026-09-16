@@ -29,3 +29,36 @@ jobs:
 
       - name: Push frontend image
         run: docker push krishnna26/ai-legacy-frontend:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull krishnna26/ai-legacy-backend:latest
+            docker pull krishnna26/ai-legacy-frontend:latest
+
+            docker stop ai-legacy-backend || true
+            docker rm ai-legacy-backend || true
+
+            docker stop ai-legacy-frontend || true
+            docker rm ai-legacy-frontend || true
+
+            docker run -d \
+              --name ai-legacy-backend \
+              --network ai-legacy-network \
+              --env-file backend.env \
+              krishnna26/ai-legacy-backend:latest
+
+            docker run -d \
+              --name ai-legacy-frontend \
+              --network ai-legacy-network \
+              -p 80:80 \
+              krishnna26/ai-legacy-frontend:latest
