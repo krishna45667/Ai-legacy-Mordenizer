@@ -34,7 +34,7 @@ export default function HistoryDashboard({
     setError(null);
 
     try {
-      const res = await fetch("http://localhost:5000/api/history", {
+      const res = await fetch("/api/history", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -61,7 +61,7 @@ export default function HistoryDashboard({
   const handleDelete = async (id) => {
     if (!token) return;
     try {
-      await fetch(`http://localhost:5000/api/history/${id}`, {
+      await fetch(`/api/history/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });

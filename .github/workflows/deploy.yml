@@ -1,0 +1,19 @@
+name: AI Legacy CI/CD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build backend image
+        run: docker build -t krishnna26/ai-legacy-backend:latest ./backend
+
+      - name: Build frontend image
+        run: docker build -t krishnna26/ai-legacy-frontend:latest ./frontend

@@ -82,7 +82,7 @@ export default function WorkbenchPage() {
     setSaveStatus(null);
 
     try {
-      const response = await fetch("http://localhost:5000/api/modernize", {
+      const response = await fetch("/api/modernize", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -127,7 +127,7 @@ export default function WorkbenchPage() {
 
   const saveToHistory = async (modernizedData, rawCode) => {
     try {
-      const response = await fetch("http://localhost:5000/api/history", {
+      const response = await fetch("/api/history", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
